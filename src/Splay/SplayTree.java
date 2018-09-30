@@ -24,6 +24,7 @@ public class SplayTree<T extends Comparable<T>> {
     }
 
     public boolean insert(T data) {
+        boolean result = false;
         Node<T> insertNode = new Node(data);
         if (isEmpty()) {
             root = insertNode;
@@ -32,29 +33,58 @@ public class SplayTree<T extends Comparable<T>> {
         }
 
         Node<T> current = root;
-        while (!current.isLeaf()) {
-
+        while (!current.isLeaf()|| current.isRoot()) {
+            if (current.getData().compareTo(insertNode.getData()) == 0) {
+                result = false;
+                break;
+            }
+            // vkladany prvok je "mensi"
+            if (current.getData().compareTo(insertNode.getData()) == -1) {
+                // ak nema laveho syna tak mu ho nastav na vkladany prvok
+                if (current.getLeftSon() == null) {
+                    current.setLeftSon(insertNode);
+                    insertNode.setParent(current);
+                    current = insertNode;
+                    count++;
+                    result = true;
+                } else {
+                    current = current.getLeftSon();
+                }
+            } else {
+                // ak nema praveho syna tak mu ho nastav na vkladany prvok
+                if (current.getRightSon() == null) {
+                    current.setRightSon(insertNode);
+                    insertNode.setParent(current);
+                    current = insertNode;
+                    count++;
+                    result = true;
+                } else {
+                    current = current.getRightSon();
+                }
+            }
         }
-
         splay(current);
-        count++;
-        return true;
+        return result;
     }
 
     public void splay(Node<T> node) {
         while (node.getData().compareTo(root.getData()) != 0) {
             if (node.getParent().isRoot()) {
-                zig(node);
+                if (node.isLeftSon()) {
+                    zig(node);
+                } else {
+                    zag(node);
+                }
             }
         }
     }
 
     private void zig(Node<T> node) {
-        if (node.isLeftSon()) {
-            rightRotation(node);
-        } else {
-            leftRotation(node);
-        }
+        rightRotation(node);
+    }
+
+    private void zag(Node<T> node) {
+        leftRotation(node);
     }
 
     private void leftRotation(Node<T> node) {
