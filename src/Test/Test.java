@@ -41,29 +41,37 @@ public class Test <T extends Comparable<T>>  {
             System.out.println("Seed:******************************************************************************** " + i);
             arr = new ArrayList<>();
             splayTree = (SplayTree<T>) new SplayTree<Person>();
-
-            for (int j = 0; j < 3000000; j++) {
+            int duplicite = 0;
+            for (int j = 0; j < 300000; j++) {
                 int Id = randomGenerator.nextInt(10000000);
                 Person person = new Person(Id, "Marek", "Bugaj");
-                //arr.add(person);
-                System.out.println("Vkladam: " + person);
+                arr.add(person);
+                //System.out.println("Vkladam: " + person);
                 boolean result = splayTree.insert((T) person);
+
                 if (!result){
-                    System.out.println("Prvok s rovnakym klucom sa uz v strome nachadza");
+                    duplicite++;
+                    //System.out.println("Prvok s rovnakym klucom sa uz v strome nachadza");
                 }
             }
 
-//            for (int k = 0; k < arr.size(); k++) {
-//                Person personArr = arr.get(k);
-//                T personTree = splayTree.find((T) personArr);
-//                if (personTree != null) {
-//                    System.out.println("true: DataArr: (" + personArr.getRC() + ")   " + "DataTree: (" + personTree.toString() + ")");
-//                    //System.out.println("Seed: " + i);
-//                } else {
-//                    System.out.println("false, prvok sa v strome nenasiel: " + personTree.toString());
-//                    return false;
-//                }
-//            }
+            if((arr.size()-duplicite) == splayTree.getCount()){
+                System.out.println("Arr count: " + arr.size() + " - dublicites: " + duplicite + "; splay count: " + splayTree.getCount());
+            } else {
+                System.out.println("Arr count: " + arr.size() + "splay count: " + splayTree.getCount());
+            }
+
+            for (int k = 0; k < arr.size(); k++) {
+                Person personArr = arr.get(k);
+                T personTree = splayTree.find((T) personArr);
+                if (personTree != null) {
+                    //System.out.println("true: DataArr: (" + personArr.getRC() + ")   " + "DataTree: (" + personTree.toString() + ")");
+                    //System.out.println("Seed: " + i);
+                } else {
+                    System.out.println("false, prvok sa v strome nenasiel: " + personTree.toString());
+                    return false;
+                }
+            }
         }
         return true;
     }

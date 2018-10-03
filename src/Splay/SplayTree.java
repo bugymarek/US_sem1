@@ -71,6 +71,34 @@ public class SplayTree<T extends Comparable<T>> {
         return result;
     }
 
+    public T find(T data) {
+        Node<T> current = root;
+        if (root == null) return null;
+
+        while (current.getData().compareTo(data) != 0) {
+            if (current.getData().compareTo(data) == -1) {
+                if (current.getLeftSon() != null) {
+                    current = current.getLeftSon();
+                } else {
+                    break;
+                }
+            } else {
+                if (current.getRightSon() != null) {
+                    current = current.getRightSon();
+                } else {
+                    break;
+                }
+            }
+        }
+
+        splay(current);
+        if (root.getData().compareTo(data) == 0) {
+            return root.getData();
+        } else {
+            return null;
+        }
+    }
+
     public void splay(Node<T> node) {
         while (node.getData().compareTo(root.getData()) != 0) {
             if (node.getParent().isRoot()) {// mozno null exeption ak node nema otca
@@ -166,5 +194,9 @@ public class SplayTree<T extends Comparable<T>> {
 
     public boolean isEmpty() {
         return root == null;
+    }
+
+    public int getCount() {
+        return count;
     }
 }
