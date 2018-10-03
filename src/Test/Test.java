@@ -38,14 +38,19 @@ public class Test <T extends Comparable<T>>  {
         ArrayList<Person> arr = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             randomGenerator.setSeed(i);
+            System.out.println("Seed:******************************************************************************** " + i);
             arr = new ArrayList<>();
             splayTree = (SplayTree<T>) new SplayTree<Person>();
 
-            for (int j = 0; j < 300; j++) {
-                int Id = randomGenerator.nextInt(1000000);
+            for (int j = 0; j < 3000000; j++) {
+                int Id = randomGenerator.nextInt(10000000);
                 Person person = new Person(Id, "Marek", "Bugaj");
-                arr.add(person);
-                splayTree.insert((T) person);
+                //arr.add(person);
+                System.out.println("Vkladam: " + person);
+                boolean result = splayTree.insert((T) person);
+                if (!result){
+                    System.out.println("Prvok s rovnakym klucom sa uz v strome nachadza");
+                }
             }
 
 //            for (int k = 0; k < arr.size(); k++) {

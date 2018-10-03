@@ -1,5 +1,7 @@
 package Splay;
 
+import Test.Person;
+
 public class SplayTree<T extends Comparable<T>> {
     private Node<T> root;
     private int count;
@@ -33,7 +35,7 @@ public class SplayTree<T extends Comparable<T>> {
         }
 
         Node<T> current = root;
-        while (!current.isLeaf()|| current.isRoot()) {
+        while (true) {
             if (current.getData().compareTo(insertNode.getData()) == 0) {
                 result = false;
                 break;
@@ -47,6 +49,7 @@ public class SplayTree<T extends Comparable<T>> {
                     current = insertNode;
                     count++;
                     result = true;
+                    break;
                 } else {
                     current = current.getLeftSon();
                 }
@@ -58,6 +61,7 @@ public class SplayTree<T extends Comparable<T>> {
                     current = insertNode;
                     count++;
                     result = true;
+                    break;
                 } else {
                     current = current.getRightSon();
                 }
@@ -69,36 +73,90 @@ public class SplayTree<T extends Comparable<T>> {
 
     public void splay(Node<T> node) {
         while (node.getData().compareTo(root.getData()) != 0) {
-            if (node.getParent().isRoot()) {
+            if (node.getParent().isRoot()) {// mozno null exeption ak node nema otca
                 if (node.isLeftSon()) {
                     zig(node);
                 } else {
                     zag(node);
                 }
+            } else {
+                if (node.isLeftSon() && node.getParent().isLeftSon()) {// nasledujuci kod sa da spravit ajt ak, ze v metodach budem volat metodu splay
+                    zigZig(node);
+                } else if (node.isRightSon() && node.getParent().isRightSon()) {
+                    zagZag(node);
+                } else if (node.isLeftSon() && node.getParent().isRightSon()) {
+                    zigZag(node);
+                } else {
+                    zagZig(node);
+                }
             }
         }
     }
 
+    private void zagZig(Node<T> node) {
+        Node<T> grandParent = node.getParent().getParent();
+        leftRotation(node.getParent());
+        rightRotation(grandParent);
+    }
+
+    private void zigZag(Node<T> node) {
+        Node<T> grandParent = node.getParent().getParent();
+        rightRotation(node.getParent());
+        leftRotation(grandParent);
+    }
+
+    private void zagZag(Node<T> node) {
+        Node<T> grandParent = node.getParent().getParent();
+        leftRotation(grandParent);
+        leftRotation(node.getParent());
+    }
+
+    private void zigZig(Node<T> node) {
+        Node<T> grandParent = node.getParent().getParent();
+        rightRotation(grandParent);
+        rightRotation(node.getParent());
+    }
+
     private void zig(Node<T> node) {
-        rightRotation(node);
+        rightRotation(node.getParent());
     }
 
     private void zag(Node<T> node) {
-        leftRotation(node);
+        leftRotation(node.getParent());
     }
 
     private void leftRotation(Node<T> node) {
-        root.setRightSon(node.getLeftSon());
-        node.setLeftSon(root);
-        root.setParent(node);
-        setNewRoot(node);
+        Node<T> tmp = node.getRightSon();
+        node.setRightSon(tmp.getLeftSon());
+        if (node.getRightSon() != null) {
+            node.getRightSon().setParent(node);
+        }
+        tmp.setLeftSon(node);
+        setParents(node, tmp);
     }
 
     private void rightRotation(Node<T> node) {
-        root.setLeftSon(node.getRightSon());
-        node.setRightSon(root);
-        root.setParent(node);
-        setNewRoot(node);
+        Node<T> tmp = node.getLeftSon();
+        node.setLeftSon(tmp.getRightSon());
+        if (node.getLeftSon() != null) {
+            node.getLeftSon().setParent(node);
+        }
+        tmp.setRightSon(node);
+        setParents(node, tmp);
+    }
+
+    private void setParents(Node<T> node, Node<T> tmp) {
+        if (node.isRoot()) {
+            setNewRoot(tmp);
+        } else {
+            if (node.isRightSon()) {
+                node.getParent().setRightSon(tmp);
+            } else {
+                node.getParent().setLeftSon(tmp);
+            }
+            tmp.setParent(node.getParent());
+        }
+        node.setParent(tmp);
     }
 
     private void setNewRoot(Node<T> node) {
