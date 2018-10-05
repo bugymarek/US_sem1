@@ -10,5 +10,6 @@ public class Main {
         Test<Person> test = new Test<>(splayTree);
         //test.checkDelete();
         test.checkInsert();
+        //test.checkInsertbasic();
     }
 }

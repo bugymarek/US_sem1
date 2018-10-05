@@ -99,6 +99,51 @@ public class SplayTree<T extends Comparable<T>> {
         }
     }
 
+    public boolean delete(T data) {
+        T result = find(data);
+        if(result == null){
+            return false;
+        }
+        Node<T> root1 = root.getLeftSon();
+        Node<T> root2 = root.getRightSon();
+        // hladany prvok je root
+        if(root1 == null && root2 == null){
+            count--;
+            root = null;
+            return true;
+        }
+        if(root1 == null){
+            root = root2;
+            root.setParent(null);
+            count--;
+            return true;
+        }
+        if(root2 == null){
+            root = root1;
+            root.setParent(null);
+            count--;
+            return true;
+        }
+
+        //existuju dva stromy
+        Node<T> findedNode = findMaxNode(root1);
+        root = root1;
+        count--;
+        root.setParent(null);
+        splay(findedNode);
+        root.setRightSon(root2);
+        root2.setParent(root);
+        return true;
+    }
+
+    private Node<T> findMaxNode(Node<T> root) {
+        Node<T> current = root;
+        while (current.getRightSon()!= null){
+            current = current.getRightSon();
+        }
+        return current;
+    }
+
     public void splay(Node<T> node) {
         while (node.getData().compareTo(root.getData()) != 0) {
             if (node.getParent().isRoot()) {// mozno null exeption ak node nema otca
