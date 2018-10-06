@@ -69,28 +69,34 @@ public class Test<T extends Comparable<T>> {
             for (int n = 0; n < 5000; n++) {
 
                 int id = randomGenerator.nextInt(50000) + RANGE_ISERT;
-                if(splayTree.find((T) new Person(id, "", ""))!= null){
+                if (splayTree.find((T) new Person(id, "", "")) != null) {
                     System.out.println("Nasiel sa prvok, ktory v strome nemal byt");
                     return false;
                 }
 
 
                 id = randomGenerator.nextInt(50000) + RANGE_ISERT;
-                if(splayTree.find((T) new Person(id, "", ""))!= null){
+                if (splayTree.find((T) new Person(id, "", "")) != null) {
                     System.out.println("Nasiel sa prvok, ktory v strome nemal byt");
                     return false;
                 }
 
                 id = id - RANGE_ISERT - RANGE_ISERT;
-                if(splayTree.find((T) new Person(id, "", ""))!= null){
+                if (splayTree.find((T) new Person(id, "", "")) != null) {
                     System.out.println("Nasiel sa prvok, ktory v strome nemal byt");
                     return false;
                 }
-                if(splayTree.find((T) new Person(id, "", ""))!= null){
+                if (splayTree.find((T) new Person(id, "", "")) != null) {
                     System.out.println("Nasiel sa prvok, ktory v strome nemal byt");
                     return false;
                 }
             }
+
+//            int n = 0;
+//            for (T p : splayTree.inorder()) {
+//                System.out.println(n + ". " + ((Person) p).toString());
+//                n++;
+//            }
 
             for (int k = 0; k < arr.size(); k++) {
                 Person personArr = arr.get(k);

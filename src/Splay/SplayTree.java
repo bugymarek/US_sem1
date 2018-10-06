@@ -2,6 +2,9 @@ package Splay;
 
 import Test.Person;
 
+import java.util.ArrayList;
+import java.util.Stack;
+
 public class SplayTree<T extends Comparable<T>> {
     private Node<T> root;
     private int count;
@@ -243,5 +246,23 @@ public class SplayTree<T extends Comparable<T>> {
 
     public int getCount() {
         return count;
+    }
+
+    public ArrayList<T> inorder(){
+        ArrayList<T> listArr = new ArrayList<>();
+        Node<T> current = root;
+        Stack<Node<T>> stack = new Stack<>();
+
+        while (current != null || !stack.isEmpty()){
+            if(current == null){
+                current = stack.pop();
+                listArr.add(current.getData());
+                current = current.getRightSon();
+            }else {
+                stack.push(current);
+                current = current.getLeftSon();
+            }
+        }
+        return listArr;
     }
 }
